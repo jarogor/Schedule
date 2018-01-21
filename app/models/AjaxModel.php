@@ -100,7 +100,7 @@ TAG
                 $dateEnd = date('Y-m-d H:i:s', strtotime($dateBegin .' +'. $randomDays .' Day'));
                 $dateReverse = date('Y-m-d H:i:s', strtotime($dateBegin .' +'. ($randomDays * 2) .' Day'));
 
-                $stm = $this->_db->prepare("INSERT INTO tasks (id_courier, id_region, date_start, date_end, date_reverse) VALUES (:id_courier, :id_region, :date_start :date_end, :date_reverse)");
+                $stm = $this->_db->prepare("INSERT INTO tasks (id_courier, id_region, date_start, date_end, date_reverse) VALUES (:id_courier, :id_region, :date_start, :date_end, :date_reverse)");
                 $stm->execute([
                     ':id_courier' => $cr,
                     ':id_region' => rand(1, 10),
