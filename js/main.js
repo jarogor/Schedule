@@ -8,6 +8,8 @@ $(document).ready(function() {
         date_start = $('#date_start'),
         date_end = $('#date_end');
 
+    var timeoutShowing;
+
     regions.change(function() {
         formData.region = this.value;
         $(this).removeClass('is-invalid');
@@ -91,29 +93,38 @@ $(document).ready(function() {
                 // dataType: 'json',
                 success: function (res) {
 
-                    if(res.status === 'offerTask' && res.data) {
+                    if(res.status === 'offerTask') {
 
-                        var html= couriers.find('option:selected').text() + ' в это время в дороге. Свободные дни для поездок: <ul>';
+                        if(timeoutShowing) clearTimeout(timeoutShowing);
 
-                        res.data.forEach(function (item) {
-                            html += '<li>с ' + item.date_start + ' по ' + item.date_end +  '</li>';
-                        });
+                        var html= couriers.find('option:selected').text() + ' в это время в дороге.';
 
-                        html += '</ul>';
+                        if(res.data.length) {
+                            html += ' Свободные дни для поездок: <ul>';
+
+                            res.data.forEach(function (item) {
+                                html += '<li>с ' + item.date_start + ' по ' + item.date_end + '</li>';
+                            });
+
+                            html += '</ul>';
+                        }
 
                         $('.alert').html('').append(html).removeClass('alert-success').addClass('alert-dark');
+
                     }
 
                     if(res.status === 'setTask') {
+
                         $('.alert').html('Задача успешно добавлена.').removeClass('alert-dark').addClass('alert-success');
-                        setInterval(function () {
+
+                        timeoutShowing = setTimeout(function () {
                             $('.alert').html('').removeClass('alert-success');
                         }, 5000);
                     }
                 }
             });
         }
-    })
+    });
 
     $('.get-clear-data').click(function () {
         $.ajax({
